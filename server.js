@@ -1,13 +1,15 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 const app = express();
 // middleware
 app.use(cors());
+// Body parser
+app.use(express.json());
 
 app.use(express.json());
-const { MongoClient, ServerApiVersion } = require("mongodb");
 const uri = process.env.MONGO_URL;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -28,6 +30,13 @@ async function run() {
       const query = {};
       const services = await servicesCollection.find(query).toArray();
       res.send(services);
+    });
+
+    app.get("/services/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await servicesCollection.findOne(query);
+      res.send(result);
     });
 
     console.log(
