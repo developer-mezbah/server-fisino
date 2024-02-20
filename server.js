@@ -25,6 +25,7 @@ async function run() {
   try {
     const database = client.db("Fisino");
     const servicesCollection = database.collection("Services");
+    const ordersCollection = database.collection("Orders");
 
     app.get("/services", async (req, res) => {
       const query = {};
@@ -39,6 +40,24 @@ async function run() {
       res.send(result);
     });
 
+    app.post("/orders", async (req, res) => {
+      const ordersData = req.body;
+      const result = await ordersCollection.insertOne(ordersData);
+      res.send(result);
+    });
+    app.get("/orders", async (req, res) => {
+      const email = req.query.email;
+      const query = { email: email };
+      const orders = await ordersCollection.find(query).toArray();
+      res.send(orders);
+    });
+
+    app.delete("/orders/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await ordersCollection.deleteOne(query);
+      res.send(result);
+    });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
