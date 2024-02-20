@@ -67,10 +67,6 @@ async function run() {
 }
 run().catch(console.dir);
 
-// app.post("/example", (req, res) => {
-//   const dataFromClient = req.body;
-//   res.send("Data received and processed successfully");
-// });
 
 const PORT = 3000;
 app.listen(PORT, () => {
